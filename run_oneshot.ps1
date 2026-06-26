@@ -6,14 +6,22 @@
 
   Output: results/oneshot.csv
 
-  Usage:  ./run_oneshot.ps1 -N 512
+  Agent-agnostic: works with Amp or Claude Code (-Agent amp | claude).
+
+  Usage:  ./run_oneshot.ps1 -N 512 -Agent amp
 #>
-param([int] $N = 512, [string] $Std = "c++17")
+param([int] $N = 512, [string] $Std = "c++17",
+      [ValidateSet("amp","claude")] [string] $Agent = "amp")
 
 $ErrorActionPreference = "Stop"
 $dir = $PSScriptRoot
 $csv = Join-Path $dir "results\oneshot.csv"
 "gflops,correct,ms,built" | Set-Content $csv
+
+function Invoke-Agent([string] $p) {
+    if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions | Out-Host }
+    else                     { & amp   -x $p --dangerously-allow-all       | Out-Host }
+}
 
 $prompt = @"
 Optimize the matrix multiply in solution.hpp (C = A*B, double, row-major, N x N)
@@ -21,7 +29,7 @@ to run as fast as possible at N=$N. It MUST stay numerically correct. Edit only
 solution.hpp, keep the function signature, standard headers only, no external
 libraries. This is your one and only attempt -- do your best in a single pass.
 "@
-& amp -x $prompt --dangerously-allow-all | Out-Host
+Invoke-Agent $prompt
 
 & powershell -ExecutionPolicy Bypass -File "$dir\build.ps1" -Std $Std *> $null
 if ($LASTEXITCODE -ne 0) {

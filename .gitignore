@@ -4,3 +4,5 @@ results/best_solution.hpp
 bench.exe
 *.exe
 *.o
+results/benchmark.png
+results/benchmark.svg

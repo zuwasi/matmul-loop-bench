@@ -49,17 +49,27 @@ A hand-tuned reference reached ~12–22 GFLOP/s; a one-shot pass typically lands
 at the first rung (cache reorder) and stops. Headroom remains (alignment, SIMD
 intrinsics, multithreading) — the loop keeps climbing it, the one-shot doesn't.
 
+![sample result](results/sample_benchmark.png)
+
 ## Run it
 
-```powershell
-# Window A (left) — baseline
-./run_oneshot.ps1 -N 512
+Step-by-step instructions are in **[RUNBOOK.md](./RUNBOOK.md)**. Short version:
 
-# Window B (right) — loop
-./optimize_loop.ps1 -Iterations 6 -N 512
+```powershell
+git checkout -- solution.hpp            # reset to naive before each run
+./run_oneshot.ps1     -N 512 -Agent amp # Window A (left) — baseline
+./optimize_loop.ps1   -N 512 -Agent amp # Window B (right) — loop
+python chart.py                         # render results/benchmark.png end-card
 ```
 
 Then compare `results/oneshot.csv` vs `results/loop.csv`.
+
+## Amp or Claude?
+
+Agent-agnostic — pass `-Agent amp` (default) or `-Agent claude`. The only
+agent-specific line is the headless call (`amp -x …` vs `claude -p …`); the
+benchmark, gate, build, and chart are identical. You can even pit Amp vs Claude
+under the same loop and gate. See RUNBOOK.md.
 
 ## Side-by-side video protocol
 
@@ -103,4 +113,6 @@ compiler. (Rust would also work; C++ gives the widest, most familiar headroom.)
 - `build.ps1` — shared build (`-O3 -march=native`, `-Std` selectable)
 - `optimize_loop.ps1` — the loop (correctness + "faster" gated, keeps best)
 - `run_oneshot.ps1` — the one-shot baseline
-- `results/sample_loop_run.csv` — a real recorded trajectory
+- `chart.py` — renders the GFLOP/s end-card (PNG + SVG)
+- `RUNBOOK.md` — step-by-step run + record instructions
+- `results/sample_loop_run.csv` / `sample_benchmark.png` — a real recorded run
