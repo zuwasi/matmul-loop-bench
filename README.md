@@ -53,7 +53,8 @@ intrinsics, multithreading) — the loop keeps climbing it, the one-shot doesn't
 
 ## Run it
 
-Step-by-step instructions are in **[RUNBOOK.md](./RUNBOOK.md)**. Short version:
+Step-by-step instructions: **[RUNBOOK_AMP.md](./RUNBOOK_AMP.md)** (Amp) ·
+**[RUNBOOK_CLAUDE.md](./RUNBOOK_CLAUDE.md)** (Claude Code). Short version:
 
 ```powershell
 git checkout -- solution.hpp            # reset to naive before each run
@@ -69,7 +70,7 @@ Then compare `results/oneshot.csv` vs `results/loop.csv`.
 Agent-agnostic — pass `-Agent amp` (default) or `-Agent claude`. The only
 agent-specific line is the headless call (`amp -x …` vs `claude -p …`); the
 benchmark, gate, build, and chart are identical. You can even pit Amp vs Claude
-under the same loop and gate. See RUNBOOK.md.
+under the same loop and gate. See RUNBOOK_AMP.md / RUNBOOK_CLAUDE.md.
 
 ## Side-by-side video protocol
 
@@ -114,5 +115,5 @@ compiler. (Rust would also work; C++ gives the widest, most familiar headroom.)
 - `optimize_loop.ps1` — the loop (correctness + "faster" gated, keeps best)
 - `run_oneshot.ps1` — the one-shot baseline
 - `chart.py` — renders the GFLOP/s end-card (PNG + SVG)
-- `RUNBOOK.md` — step-by-step run + record instructions
+- `RUNBOOK_AMP.md` / `RUNBOOK_CLAUDE.md` — step-by-step run + record instructions
 - `results/sample_loop_run.csv` / `sample_benchmark.png` — a real recorded run
