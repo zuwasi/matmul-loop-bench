@@ -118,3 +118,5 @@ compiler. (Rust would also work; C++ gives the widest, most familiar headroom.)
 - `stream_fmt.py` — live formatter for `-Stream` (shows agent tool calls live)
 - `RUNBOOK_AMP.md` / `RUNBOOK_CLAUDE.md` — step-by-step run + record instructions
 - `results/sample_loop_run.csv` / `sample_benchmark.png` — a real recorded run
+- `results/sample_optimized_solution.hpp` — example of what the loop can produce
+  (multithreaded + register-blocked); for reference only, not used by the demo
