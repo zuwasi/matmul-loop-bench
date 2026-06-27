@@ -49,6 +49,9 @@ function Invoke-Bench {
     return $null
 }
 
+# Remember the original (naive) solution so we can leave the tree clean on exit.
+$original = Get-Content "$dir\solution.hpp" -Raw
+
 # Baseline (the naive shipped solution).
 $r = Invoke-Bench
 $bestGflops = if ($r -and $r.correct -eq 1) { $r.gflops } else { 0 }
@@ -84,5 +87,9 @@ restrict/alignment, register blocking, SIMD-friendly inner loop), then stop.
     "$i,$($r.gflops),1,$($r.ms)" | Add-Content $csv
 }
 
-Copy-Item $best "$dir\solution.hpp" -Force
-Write-Host "`n[loop] FINAL best: $bestGflops GFLOP/s  (see results\loop.csv)" -ForegroundColor Green
+# Leave solution.hpp exactly as we found it (the naive baseline) so the tracked
+# file is never dirtied. The winning solution is saved separately.
+Set-Content "$dir\solution.hpp" $original -NoNewline
+Write-Host "`n[loop] FINAL best: $bestGflops GFLOP/s" -ForegroundColor Green
+Write-Host "[loop] winner saved to results\best_solution.hpp; solution.hpp left at naive baseline." -ForegroundColor Green
+Write-Host "[loop] to build/inspect the winner: copy results\best_solution.hpp over solution.hpp." -ForegroundColor DarkGray

@@ -6,3 +6,4 @@ bench.exe
 *.o
 results/benchmark.png
 results/benchmark.svg
+results/oneshot_solution.hpp

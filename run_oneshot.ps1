@@ -30,6 +30,9 @@ function Invoke-Agent([string] $p) {
     }
 }
 
+# Remember the original (naive) solution so we can leave the tree clean on exit.
+$original = Get-Content "$dir\solution.hpp" -Raw
+
 $prompt = @"
 Optimize the matrix multiply in solution.hpp (C = A*B, double, row-major, N x N)
 to run as fast as possible at N=$N. It MUST stay numerically correct. Edit only
@@ -42,6 +45,8 @@ Invoke-Agent $prompt
 if ($LASTEXITCODE -ne 0) {
     Write-Host "[oneshot] DID NOT BUILD" -ForegroundColor Red
     "0,0,0,0" | Set-Content $csv
+    Copy-Item "$dir\solution.hpp" "$dir\results\oneshot_solution.hpp" -Force
+    Set-Content "$dir\solution.hpp" $original -NoNewline   # leave tree clean
     exit 0
 }
 $line = & "$dir\bench.exe" $N
@@ -49,3 +54,9 @@ Write-Host "[oneshot] $line"
 if ($line -match "correct=(\d+) gflops=([\d.]+) ms=([\d.]+)") {
     "$($Matches[2]),$($Matches[1]),$($Matches[3]),1" | Set-Content $csv
 }
+
+# Save the one-shot's attempt, then restore the naive baseline so the tracked
+# solution.hpp is never dirtied.
+Copy-Item "$dir\solution.hpp" "$dir\results\oneshot_solution.hpp" -Force
+Set-Content "$dir\solution.hpp" $original -NoNewline
+Write-Host "[oneshot] solution.hpp left at naive baseline; attempt saved to results\oneshot_solution.hpp." -ForegroundColor DarkGray
