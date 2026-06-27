@@ -11,16 +11,23 @@
   Usage:  ./run_oneshot.ps1 -N 512 -Agent amp
 #>
 param([int] $N = 512, [string] $Std = "c++17",
-      [ValidateSet("amp","claude")] [string] $Agent = "amp")
+      [ValidateSet("amp","claude")] [string] $Agent = "amp",
+      [switch] $Stream)
 
 $ErrorActionPreference = "Stop"
 $dir = $PSScriptRoot
 $csv = Join-Path $dir "results\oneshot.csv"
 "gflops,correct,ms,built" | Set-Content $csv
 
+# -Stream shows the agent's tool calls / edits live via stream_fmt.py.
 function Invoke-Agent([string] $p) {
-    if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions | Out-Host }
-    else                     { & amp   -x $p --dangerously-allow-all       | Out-Host }
+    if ($Stream) {
+        if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions --output-format stream-json --verbose | python -u "$dir\stream_fmt.py" }
+        else                     { & amp   -x $p --dangerously-allow-all --stream-json                                 | python -u "$dir\stream_fmt.py" }
+    } else {
+        if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions | Out-Host }
+        else                     { & amp   -x $p --dangerously-allow-all       | Out-Host }
+    }
 }
 
 $prompt = @"

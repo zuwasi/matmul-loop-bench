@@ -18,7 +18,8 @@
   Usage:  ./optimize_loop.ps1 -Iterations 6 -N 512 -Agent amp
 #>
 param([int] $Iterations = 6, [int] $N = 512, [string] $Std = "c++17",
-      [ValidateSet("amp","claude")] [string] $Agent = "amp")
+      [ValidateSet("amp","claude")] [string] $Agent = "amp",
+      [switch] $Stream)
 
 $ErrorActionPreference = "Stop"
 $dir   = $PSScriptRoot
@@ -27,9 +28,15 @@ $best  = Join-Path $dir "results\best_solution.hpp"
 "iter,gflops,correct,ms" | Set-Content $csv
 
 # Only agent-specific line in the whole demo: the headless invocation.
+# -Stream shows the agent's tool calls / edits live via stream_fmt.py.
 function Invoke-Agent([string] $p) {
-    if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions | Out-Host }
-    else                     { & amp   -x $p --dangerously-allow-all       | Out-Host }
+    if ($Stream) {
+        if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions --output-format stream-json --verbose | python -u "$dir\stream_fmt.py" }
+        else                     { & amp   -x $p --dangerously-allow-all --stream-json                                 | python -u "$dir\stream_fmt.py" }
+    } else {
+        if ($Agent -eq "claude") { & claude -p $p --dangerously-skip-permissions | Out-Host }
+        else                     { & amp   -x $p --dangerously-allow-all       | Out-Host }
+    }
 }
 
 function Invoke-Bench {

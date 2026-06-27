@@ -52,6 +52,25 @@ git checkout -- solution.hpp
 Start both at the same moment. The loop prints its best GFLOP/s each iteration;
 the one-shot prints a single final line.
 
+## 3b. Watch the agent in real time
+
+By default `amp -x` only prints the final message per step. To see tool calls,
+file edits, and thinking as they happen, pick any of these:
+
+- **Live in the terminal** — add `-Stream` to either script:
+  ```powershell
+  ./optimize_loop.ps1 -N 512 -Agent amp -Stream
+  ```
+  It pipes `amp -x … --stream-json` through `stream_fmt.py`, printing each step:
+  the thread URL, `-> Bash:/edit_file:` tool calls, `[ok]` results, and `== done`.
+- **In the browser (great for video)** — each step prints a thread URL
+  (`https://ampcode.com/threads/T-…`). Open it to watch live, or run `amp top`
+  in a spare terminal to see all active threads.
+- **Watch the file change** — in a third pane:
+  ```powershell
+  Get-Content solution.hpp -Wait -Tail 40
+  ```
+
 ## 4. Render the end-card chart
 
 ```powershell

@@ -52,6 +52,26 @@ git checkout -- solution.hpp
 Start both at the same moment. The loop prints its best GFLOP/s each iteration;
 the one-shot prints a single final line.
 
+## 3b. Watch the agent in real time
+
+By default `claude -p` only prints the final message per step. To see tool
+calls and edits as they happen, pick either:
+
+- **Live in the terminal** — add `-Stream` to either script:
+  ```powershell
+  ./optimize_loop.ps1 -N 512 -Agent claude -Stream
+  ```
+  It runs `claude -p … --output-format stream-json --verbose` and pipes it
+  through `stream_fmt.py`, printing each `-> tool` call, `[ok]` result, and
+  `== done`.
+- **Watch the file change** — in a third pane:
+  ```powershell
+  Get-Content solution.hpp -Wait -Tail 40
+  ```
+
+(Claude has no public live thread viewer like `amp top`; use `-Stream` or the
+file watcher.)
+
 ## 4. Render the end-card chart
 
 ```powershell

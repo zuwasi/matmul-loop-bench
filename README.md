@@ -115,5 +115,6 @@ compiler. (Rust would also work; C++ gives the widest, most familiar headroom.)
 - `optimize_loop.ps1` — the loop (correctness + "faster" gated, keeps best)
 - `run_oneshot.ps1` — the one-shot baseline
 - `chart.py` — renders the GFLOP/s end-card (PNG + SVG)
+- `stream_fmt.py` — live formatter for `-Stream` (shows agent tool calls live)
 - `RUNBOOK_AMP.md` / `RUNBOOK_CLAUDE.md` — step-by-step run + record instructions
 - `results/sample_loop_run.csv` / `sample_benchmark.png` — a real recorded run
