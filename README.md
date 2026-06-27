@@ -33,8 +33,8 @@ better**, measured definitely:
 2. **Speedup factor** = loop_best / one-shot.
 3. **Correctness** — max relative error vs. reference (< 1e-9 = pass). The loop
    *guarantees* it; the one-shot can silently ship a wrong answer.
-4. **Optimization trajectory** — `results/loop.csv` (iter vs GFLOP/s) plots as a
-   rising curve; the one-shot is a single dot. The most convincing video shot.
+4. **Side-by-side bar chart** — `chart.py` renders baseline vs one-shot vs loop
+   (GFLOP/s + speedup labels). The most convincing video shot.
 
 ### Real recorded run (this machine, GCC 6.3, `-O3 -march=native`, N=512)
 

@@ -77,7 +77,7 @@ file watcher.)
 ```powershell
 python chart.py
 ```
-Writes `results/benchmark.png` and `.svg` — loop curve + one-shot dot + speedup.
+Writes `results/benchmark.png` and `.svg` — a bar chart comparing baseline / one-shot / loop.
 
 ## 5. (Optional) the strongest shot: catch a wrong answer
 

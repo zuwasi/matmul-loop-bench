@@ -76,7 +76,7 @@ file edits, and thinking as they happen, pick any of these:
 ```powershell
 python chart.py
 ```
-Writes `results/benchmark.png` and `.svg` — loop curve + one-shot dot + speedup.
+Writes `results/benchmark.png` and `.svg` — a bar chart comparing baseline / one-shot / loop.
 
 ## 5. (Optional) the strongest shot: catch a wrong answer
 
@@ -103,3 +103,4 @@ skip-approval flag only on code you trust — it lets Amp act without asking.
 | `results/loop.csv` | iter, gflops, correct, ms — the loop trajectory |
 | `results/oneshot.csv` | gflops, correct, ms, built — the one-shot result |
 | `results/benchmark.png` / `.svg` | the chart |
+
